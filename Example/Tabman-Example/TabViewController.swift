@@ -86,9 +86,9 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource {
         var count = 0
         switch bar.style {
         case .blockTabBar, .buttonBar:
-            count = 3
+            count = 4
         default:
-            count = 5
+            count = 4
         }
         
         initializeViewControllers(count: count)
@@ -100,12 +100,33 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource {
         var viewControllers = [UIViewController]()
         var barItems = [Item]()
         
-        for index in 0 ..< count {
-            let viewController = storyboard.instantiateViewController(withIdentifier: "ChildViewController") as! ChildViewController
-            viewController.index = index + 1
-            barItems.append(Item(title: "Page No. \(index + 1)"))
+        for index in 0..<count{
             
-            viewControllers.append(viewController)
+            switch index{
+            case 0:
+                let viewController = storyboard.instantiateViewController(withIdentifier: "ChildViewController") as! ChildViewController
+                barItems.append(Item(title: "Contact *"))
+                viewControllers.append(viewController)
+                
+            case 1:
+                let viewController = storyboard.instantiateViewController(withIdentifier: "ChildViewController") as! ChildViewController
+                barItems.append(Item(title: "Description *"))
+                viewControllers.append(viewController)
+                
+            case 2:
+                let viewController = storyboard.instantiateViewController(withIdentifier: "ChildViewController") as! ChildViewController
+                barItems.append(Item(title: "Barcode"))
+                viewControllers.append(viewController)
+                
+            case 3:
+                let viewController = storyboard.instantiateViewController(withIdentifier: "ChildViewController") as! ChildViewController
+                barItems.append(Item(title: "Add Photo"))
+                viewControllers.append(viewController)
+                
+            default:
+                print("No controller to instantiate")
+                
+            }
         }
 
         bar.items = barItems

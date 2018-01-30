@@ -53,6 +53,7 @@ internal class TabmanBlockTabBar: TabmanStaticButtonBar {
             self.updateButtonsInView(view: self.maskContentView, update: { (button) in
                 button.tintColor = selectedColor
                 button.setTitleColor(selectedColor, for: .normal)
+                button.attributedTitle(for: .normal)
             })
         }
     }
@@ -62,7 +63,7 @@ internal class TabmanBlockTabBar: TabmanStaticButtonBar {
             guard textFont != oldValue else {
                 return
             }
-
+            
             updateButtonsInView(view: self.buttonContentView,
                                 update: { $0.titleLabel?.font = textFont })
             updateButtonsInView(view: self.maskContentView,
@@ -71,7 +72,7 @@ internal class TabmanBlockTabBar: TabmanStaticButtonBar {
     }
     
     // MARK: Lifecycle
-
+    
     override public func defaultIndicatorStyle() -> TabmanIndicator.Style {
         return .custom(type: TabmanBlockIndicator.self)
     }
@@ -102,10 +103,29 @@ internal class TabmanBlockTabBar: TabmanStaticButtonBar {
             button.addTarget(self, action: #selector(tabButtonPressed(_:)), for: .touchUpInside)
         }
         self.addAndLayoutBarButtons(toView: maskContentView, items: items) { (button, _) in
-            button.tintColor = self.selectedColor
-            button.setTitleColor(self.selectedColor, for: .normal)
+            //button.tintColor = self.selectedColor
+            // button.setTitleColor(self.selectedColor, for: .normal)
+            //  for index in 0..<items.count{
+            if button.titleLabel?.text=="Description *" || button.titleLabel?.text=="Contact *"{
+                let main_string = button.titleLabel?.text
+                let string_to_color = button.titleLabel?.text?.replacingOccurrences(of: "*", with: "")
+                let asterisk="*"
+                let range = (main_string! as NSString).range(of: string_to_color!)
+                let range2 = (main_string! as NSString).range(of: asterisk)
+                let attributedString = NSMutableAttributedString(string:main_string!)
+                attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.white , range: range)
+                attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.red , range: range2)
+                button.setAttributedTitle(attributedString, for: .normal)
+            }
+            else{
+                let main_string = button.titleLabel?.text
+                let attributedString = NSMutableAttributedString(string:main_string!)
+                let range = (main_string! as NSString).range(of: main_string!)
+                attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.white , range: range)
+                button.setAttributedTitle(attributedString, for: .normal)
+            }
+            
         }
-        
         self.buttonContentView = buttonContentView
         self.maskContentView = maskContentView
     }
@@ -124,3 +144,4 @@ internal class TabmanBlockTabBar: TabmanStaticButtonBar {
         }
     }
 }
+

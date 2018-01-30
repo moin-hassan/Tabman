@@ -43,10 +43,21 @@ internal class TabmanButtonBar: TabmanBar {
                 return
             }
             
-            focussedButton?.setTitleColor(self.selectedColor, for: .normal)
-            focussedButton?.tintColor = self.selectedColor
-            oldValue?.setTitleColor(self.color, for: .normal)
-            oldValue?.tintColor = self.color
+            //            let main_string = "Description*"
+            //            let string_to_color = "Description"
+            //            let range = (main_string as NSString).range(of: string_to_color)
+            //            let attributedString = NSMutableAttributedString(string:main_string)
+            //            attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.white , range: range)
+            //            //button.setAttributedTitle(attributedString, for: .normal)
+            //            focussedButton?.setAttributedTitle(attributedString, for: .normal)
+            ////            focussedButton?.setTitleColor(self.selectedColor, for: .normal)
+            ////            focussedButton?.tintColor = self.selectedColor
+            ////            let range2 = (main_string as NSString).range(of: string_to_color)
+            ////            let attributedString2 = NSMutableAttributedString(string:main_string)
+            ////            attributedString2.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.red , range: range)
+            ////            oldValue?.setAttributedTitle(attributedString2, for: .normal)
+            ////            oldValue?.setTitleColor(self.color, for: .normal)
+            ////            oldValue?.tintColor = self.color
         }
     }
     
@@ -64,7 +75,7 @@ internal class TabmanButtonBar: TabmanBar {
     
     public var color: UIColor = Appearance.defaultAppearance.state.color!
     public var selectedColor: UIColor = Appearance.defaultAppearance.state.selectedColor!
-  
+    
     public var imageRenderingMode: UIImageRenderingMode = Appearance.defaultAppearance.style.imageRenderingMode! {
         didSet {
             guard oldValue != imageRenderingMode else {
@@ -204,6 +215,25 @@ internal class TabmanButtonBar: TabmanBar {
                 button.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 5.0, bottom: 0.0, right: 0.0)
             } else if let title = item.title {
                 button.setTitle(title, for: .normal)
+                if title=="Description *" || title=="Contact *"{
+                    let main_string = title
+                    let string_to_color = "*"
+                    let range = (main_string as NSString).range(of: string_to_color)
+                    let range2 = (main_string as NSString).range(of: title.replacingOccurrences(of: "*", with: ""))
+                    let attributedString = NSMutableAttributedString(string:main_string)
+                    attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.red , range: range)
+                    attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black , range: range2)
+                    button.setAttributedTitle(attributedString, for: .normal)
+                }
+                else{
+                    let main_string = title
+                    let range = (main_string as NSString).range(of: main_string)
+                    
+                    let attributedString = NSMutableAttributedString(string:main_string)
+                    attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black , range: range)
+                    button.setAttributedTitle(attributedString, for: .normal)
+                }
+                
             } else if let image = item.image {
                 // resize images to fit
                 let resizedImage = image.resize(toSize: Defaults.itemImageSize)
@@ -274,6 +304,8 @@ internal class TabmanButtonBar: TabmanBar {
     @objc internal func tabButtonPressed(_ sender: UIButton) {
         if let index = self.buttons.index(of: sender), (self.responder?.bar(self, shouldSelectItemAt: index) ?? true) {
             self.responder?.bar(self, didSelectItemAt: index)
+            
+            //changeTextColor(button:sender)
         }
     }
     
@@ -291,4 +323,19 @@ internal class TabmanButtonBar: TabmanBar {
         }
         self.layoutIfNeeded()
     }
+    
+    func changeTextColor(button:UIButton){
+        let main_string = "Description*"
+        let string_to_color = "*"
+        let titleString="Description"
+        let range = (main_string as NSString).range(of: string_to_color)
+        let range2 = (main_string as NSString).range(of: titleString)
+        let attributedString = NSMutableAttributedString(string:main_string)
+        
+        attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.red , range: range)
+        attributedString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.white , range: range2)
+        button.setAttributedTitle(attributedString, for: .selected)
+        
+    }
 }
+
